@@ -1,0 +1,57 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-gradient-to-br from-blue-50 via-white to-indigo-50 font-sans antialiased;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .message-bubble {
+    @apply max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl;
+  }
+  
+  .user-message {
+    @apply bg-primary-500 text-white rounded-2xl rounded-br-md px-4 py-3 shadow-md;
+  }
+  
+  .bot-message {
+    @apply bg-white text-gray-800 rounded-2xl rounded-bl-md px-4 py-3 shadow-md border border-gray-100;
+  }
+  
+  .typing-dots {
+    @apply flex space-x-1;
+  }
+  
+  .typing-dot {
+    @apply w-2 h-2 bg-gray-400 rounded-full animate-pulse;
+  }
+}
+
+/* Custom scrollbar */
+.chat-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.chat-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
