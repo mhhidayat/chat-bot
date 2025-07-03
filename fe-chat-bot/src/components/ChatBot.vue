@@ -2,6 +2,19 @@
 import { ref, nextTick, onMounted } from 'vue'
 import chatService from '../services/chatService'
 import { marked } from 'marked'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/atom-one-dark.css'
+
+// custom renderer
+const renderer = new marked.Renderer()
+
+renderer.code = function({ text, lang }) {
+  const validLang = lang && hljs.getLanguage(lang) ? lang : 'plaintext'
+  const highlighted = hljs.highlight(text, { language: validLang, ignoreIllegals: true }).value
+  return `<pre><code class="hljs ${validLang}">${highlighted}</code></pre>`
+}
+
+marked.use({ renderer })
 
 interface Message {
   id: number
@@ -13,7 +26,7 @@ interface Message {
 const messages = ref<Message[]>([
   {
     id: 1,
-    text: "Hello! I'm your AI assistant. How can I help you today?",
+    text: "Halo! Saya asisten AI Anda. Ada yang bisa saya bantu hari ini?",
     isUser: false,
     timestamp: new Date()
   }
@@ -45,8 +58,6 @@ const sendMessage = async () => {
   isTyping.value = true
   await scrollToBottom()
 
-  isTyping.value = false
-
   const response = await chatService.sendMessage(userInput)
   const botMessage: Message = {
     id: messageIdCounter++,
@@ -56,6 +67,7 @@ const sendMessage = async () => {
   }
   
   messages.value.push(botMessage)
+  isTyping.value = false
   await scrollToBottom()
 }
 
@@ -81,6 +93,15 @@ function highlightResponse(message: string) {
   return marked.parse(message)
 }
 
+const textareaRef = ref<HTMLTextAreaElement>()
+
+const autoResize = () => {
+  if (textareaRef.value) {
+    textareaRef.value.style.height = 'auto'
+    textareaRef.value.style.height = `${textareaRef.value.scrollHeight}px`
+  }
+}
+
 onMounted(() => {
   scrollToBottom()
 })
@@ -88,20 +109,6 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-col h-screen max-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-    <!-- Header -->
-    <div class="bg-white border-b border-gray-200 px-6 py-4 shadow-sm">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-          </svg>
-        </div>
-        <div>
-          <h1 class="text-lg font-semibold text-gray-900">AI Assistant</h1>
-          <p class="text-sm text-gray-500">Online and ready to help</p>
-        </div>
-      </div>
-    </div>
 
     <!-- Messages Container -->
     <div 
@@ -140,14 +147,16 @@ onMounted(() => {
     <div class="bg-white border-t border-gray-200 px-4 py-4">
       <div class="flex items-end space-x-3 max-w-4xl mx-auto">
         <div class="flex-1 relative">
-          <textarea
+           <textarea
             v-model="newMessage"
             @keydown="handleKeyDown"
-            placeholder="Type your message here..."
+            @input="autoResize"
+            ref="textareaRef"
+            placeholder="Tanya apa saja"
             class="w-full resize-none rounded-2xl border border-gray-300 px-4 py-3 pr-12 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-20 transition-colors text-sm"
             rows="1"
-            style="max-height: 120px; min-height: 44px;"
-          ></textarea>
+            style="max-height: 120px; min-height: 44px; overflow-y:hidden;"
+            ></textarea>
         </div>
         <button
           @click="sendMessage"
@@ -170,7 +179,7 @@ onMounted(() => {
         </button>
       </div>
       <p class="text-xs text-gray-500 text-center mt-2">
-        Press Enter to send, Shift+Enter for new line
+        Tekan Enter untuk mengirim, Shift+Enter untuk baris baru
       </p>
     </div>
   </div>
