@@ -31,21 +31,30 @@ func (h *handler) sendMessage(c *fiber.Ctx) error {
 
 	req := new(dto.SendMessageRequest)
 
-	if err := c.BodyParser(req); err != nil || strings.TrimSpace(req.Prompt) == "" {
+	if err := c.BodyParser(req); err != nil || strings.TrimSpace(req.Prompt) == "" || strings.TrimSpace(req.Model) == "" {
 		return c.Status(http.StatusBadRequest).JSON(
 			jsonutils.ErrorResponse("Prompt is required"),
 		)
 	}
 
-	channel := make(chan string)
-	go aiutils.GenerateAIResponse(ctx, req.Prompt, h.conf, channel)
+	channel := make(chan *dto.SendMessageResponse)
+	go aiutils.GenerateAIResponse(ctx, req, h.conf, channel)
 	defer close(channel)
+
+	aiResponse := <-channel
+	if !aiResponse.Status {
+		return c.Status(http.StatusInternalServerError).JSON(
+			jsonutils.ErrorResponse(
+				"Failed to generate AI response: " + aiResponse.Response,
+			),
+		)
+	}
 
 	return c.Status(http.StatusOK).JSON(
 		jsonutils.SuccessResponse(
 			"Successfully retrieved AI response",
 			fiber.Map{
-				"response": <-channel,
+				"response": aiResponse.Response,
 			},
 		),
 	)

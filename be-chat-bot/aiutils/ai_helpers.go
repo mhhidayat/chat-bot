@@ -2,34 +2,55 @@ package aiutils
 
 import (
 	"chat_bot/configs"
+	"chat_bot/dto"
 	"context"
-	"log"
 
 	"google.golang.org/genai"
 )
 
-func GenerateAIResponse(ctx context.Context, prompt string, conf *configs.Config, c chan<- string) {
+func GenerateAIResponse(ctx context.Context, sendMessageRequest *dto.SendMessageRequest, conf *configs.Config, c chan<- *dto.SendMessageResponse) {
 	client, err := genai.NewClient(ctx, &genai.ClientConfig{
 		APIKey:  conf.AI.ApiKey,
 		Backend: genai.BackendGeminiAPI,
 	})
 	if err != nil {
-		log.Fatal(err)
+		c <- &dto.SendMessageResponse{
+			Status:   false,
+			Response: "Failed to create AI client: " + err.Error(),
+		}
+		return
 	}
 
 	config := &genai.GenerateContentConfig{
-		SystemInstruction: genai.NewContentFromText("Jawab menggunakan bahasa indonesia", genai.RoleUser),
+		SystemInstruction: genai.NewContentFromText(
+			"Gunakan bahasa yang sama dengan input.",
+			genai.RoleUser,
+		),
 	}
 
 	result, err := client.Models.GenerateContent(
 		ctx,
-		conf.AI.Model,
-		genai.Text(prompt),
+		sendMessageRequest.Model,
+		genai.Text(sendMessageRequest.Prompt),
 		config,
 	)
 	if err != nil {
-		log.Fatal(err)
+		c <- &dto.SendMessageResponse{
+			Status:   false,
+			Response: "Failed to create AI client: " + err.Error(),
+		}
+		return
+	}
+	if result == nil {
+		c <- &dto.SendMessageResponse{
+			Status:   false,
+			Response: "AI response is empty",
+		}
+		return
 	}
 
-	c <- result.Text()
+	c <- &dto.SendMessageResponse{
+		Status:   true,
+		Response: result.Text(),
+	}
 }

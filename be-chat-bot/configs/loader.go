@@ -19,7 +19,6 @@ func NewConfig() *Config {
 	return &Config{
 		AI: AI{
 			ApiKey: os.Getenv("API_KEY"),
-			Model:  os.Getenv("AI_MODEL"),
 		},
 		Server: Server{
 			AllowOrigins: os.Getenv("AllowOrigins"),
