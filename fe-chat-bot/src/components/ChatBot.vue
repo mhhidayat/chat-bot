@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, nextTick, onMounted } from 'vue'
+import { ref } from 'vue'
 import chatService from '../services/chatService'
+import DropDownModel from './DropDownModel.vue';
 import { marked } from 'marked'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/atom-one-dark.css'
@@ -35,9 +36,11 @@ const messages = ref<Message[]>([
 const newMessage = ref('')
 const isTyping = ref(false)
 const messagesContainer = ref<HTMLElement>()
+const bottomMarker = ref<HTMLElement | null>(null)
+let selectedModel = ref('gemini-2.5-flash-lite-preview-06-17') // Default model
 let messageIdCounter = 2
 
-const sendMessage = async () => {
+const sendMessage = async () => { 
   if (!newMessage.value.trim()) return
 
   // Add user message
@@ -52,30 +55,29 @@ const sendMessage = async () => {
   const userInput = newMessage.value.trim()
   newMessage.value = ''
   
-  await scrollToBottom()
-  
   // Show typing indicator
   isTyping.value = true
-  await scrollToBottom()
+  setTimeout(() => {
+    if (bottomMarker.value) {
+      bottomMarker.value.scrollIntoView({ behavior: 'smooth' })
+    }
+    autoResize()
+  }, 5);
 
-  const response = await chatService.sendMessage(userInput)
-  const botMessage: Message = {
+  const response = await chatService.sendMessage(userInput, selectedModel.value)
+    const botMessage: Message = {
     id: messageIdCounter++,
     text: response.message,
     isUser: false,
     timestamp: new Date()
   }
-  
   messages.value.push(botMessage)
   isTyping.value = false
-  await scrollToBottom()
-}
-
-const scrollToBottom = async () => {
-  await nextTick()
-  if (messagesContainer.value) {
-    messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
-  }
+  setTimeout(() => {
+    if (bottomMarker.value) {
+      bottomMarker.value.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, 5);
 }
 
 const formatTime = (date: Date): string => {
@@ -102,18 +104,19 @@ const autoResize = () => {
   }
 }
 
-onMounted(() => {
-  scrollToBottom()
-})
+function handleSelectedModel(val: string) {
+  selectedModel.value = val
+}
+
 </script>
 
 <template>
-  <div class="flex flex-col h-screen max-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+  <div class="flex flex-col h-screen max-h-screen">
 
     <!-- Messages Container -->
     <div 
       ref="messagesContainer"
-      class="flex-1 overflow-y-auto px-4 py-6 space-y-4 chat-container"
+      class="flex-1 px-4 pt-6 pb-40 space-y-4 chat-container max-w-4xl w-full mx-auto"
     >
       <div
         v-for="message in messages"
@@ -123,7 +126,7 @@ onMounted(() => {
       >
         <div class="flex flex-col space-y-1">
           <div :class="['message-bubble', message.isUser ? 'user-message' : 'bot-message']">
-            <p class="text-sm leading-relaxed" v-html=highlightResponse(message.text)></p>
+            <p class="text-sm leading-relaxed" v-html="highlightResponse(message.text)"></p>
           </div>
           <div :class="['text-xs text-gray-400', message.isUser ? 'text-right' : 'text-left']">
             {{ formatTime(message.timestamp) }}
@@ -144,27 +147,27 @@ onMounted(() => {
     </div>
 
     <!-- Input Area -->
-    <div class="bg-white border-t border-gray-200 px-4 py-4">
-      <div class="flex items-end space-x-3 max-w-4xl mx-auto">
-        <div class="flex-1 relative">
+    <div class="fixed bottom-0 left-0 right-0 mx-5 md:mx-0">
+      <div class="flex items-end space-x-3 max-w-3xl mx-auto bg-gray-800/40 p-3 rounded-3xl">
+        <div class="flex-1 relative bg-gray-900 rounded-2xl">
            <textarea
             v-model="newMessage"
             @keydown="handleKeyDown"
             @input="autoResize"
             ref="textareaRef"
-            placeholder="Tanya apa saja"
-            class="w-full resize-none rounded-2xl border border-gray-300 px-4 py-3 pr-12 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-20 transition-colors text-sm"
+            placeholder="Type your message here…"
+            class="w-full resize-none min-h-16 max-h-60 rounded-2xl bg-gray-900 border-gray-800 px-4 py-3 pr-12 border-0 outline-none focus:ring-0 transition-colors text-sm text-gray-400 overflow-hidden"
             rows="1"
-            style="max-height: 120px; min-height: 44px; overflow-y:hidden;"
             ></textarea>
+        <DropDownModel @selectedModel="handleSelectedModel" />
         </div>
         <button
           @click="sendMessage"
           :disabled="!newMessage.trim() || isTyping"
-          class="inline-flex items-center justify-center w-11 h-11 rounded-full bg-primary-500 hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+          class="inline-flex items-center justify-center w-11 h-11 rounded-full bg-gray-900 hover:bg-gray-950 disabled:bg-gray-500/40 disabled:cursor-not-allowed transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
         >
           <svg 
-            class="w-5 h-5 text-white" 
+            class="w-5 h-5 text-gray-400" 
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
@@ -178,9 +181,11 @@ onMounted(() => {
           </svg>
         </button>
       </div>
-      <p class="text-xs text-gray-500 text-center mt-2">
-        Tekan Enter untuk mengirim, Shift+Enter untuk baris baru
+      <p class="text-xs text-gray-400 text-center my-1">
+        Press Enter to send, Shift+Enter for a new line
       </p>
     </div>
+
+    <div ref="bottomMarker"></div>
   </div>
 </template>

@@ -1,1 +1,1 @@
-{"root":["./src/main.ts","./src/vite-env.d.ts","./src/services/api.ts","./src/services/chatservice.ts","./src/app.vue","./src/components/chatbot.vue"],"version":"5.8.3"}
+{"root":["./src/main.ts","./src/vite-env.d.ts","./src/services/api.ts","./src/services/chatservice.ts","./src/app.vue","./src/components/chatbot.vue","./src/components/dropdownmodel.vue"],"version":"5.8.3"}

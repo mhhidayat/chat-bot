@@ -12,11 +12,12 @@ export interface ChatResponse {
 
 class ChatService {
   // Placeholder for AI integration
-  async sendMessage(message: string): Promise<ChatResponse> {
+  async sendMessage(message: string, model: string): Promise<ChatResponse> {
     try {
 
       const response = await api.post('send-message', {
         "prompt": message,
+        "model": model,
       })
 
       return { message: response.data.data.response }
@@ -24,7 +25,7 @@ class ChatService {
     } catch (error) {
       console.error('Chat service error:', error)
       return {
-        message: 'Sorry, I encountered an error. Please try again.',
+        message: `Silahkan coba ganti model atau coba beberapa saat lagi, mohon maklum keterbatasannya. Versi berbayar masih dalam pengembangan. 🚀`,
         error: error instanceof Error ? error.message : 'Unknown error'
       }
     }
