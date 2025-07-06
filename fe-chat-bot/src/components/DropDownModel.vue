@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, defineEmits, inject } from 'vue'
+import { ref, onMounted, onBeforeUnmount, inject } from 'vue'
 
 const emit = defineEmits(['selectedModel'])
 const isDarkMode = inject('theme')
