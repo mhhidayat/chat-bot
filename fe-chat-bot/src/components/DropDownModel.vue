@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, defineEmits } from 'vue'
+import { ref, onMounted, onBeforeUnmount, defineEmits, inject } from 'vue'
 
 const emit = defineEmits(['selectedModel'])
+const isDarkMode = inject('theme')
 
 const showDropdown = ref(false)
 const models = ref([
@@ -50,18 +51,32 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="relative inline-block m-2" ref="dropdownRef">
+  <div
+    class="relative inline-block m-2"
+    ref="dropdownRef"
+    :class="isDarkMode ? '' : ''"
+  >
     <button
       type="button"
       @click="showDropdown = !showDropdown"
-      class="px-2 py-1 rounded-lg focus:outline-none text-xs text-gray-400 bg-gray-800 border border-gray-700 transition-colors duration-200 hover:bg-gray-700 hover:text-white"
+      :class="[
+        'px-2 py-1 rounded-lg focus:outline-none text-xs border transition-colors duration-200',
+        isDarkMode
+          ? 'text-gray-400 bg-gray-800 border-gray-700 hover:bg-gray-700 hover:text-white'
+          : 'text-gray-700 bg-white border-gray-300 hover:bg-gray-100 hover:text-black'
+      ]"
     >
       {{ selectedModel.name }}
     </button>
 
     <div
       v-if="showDropdown"
-      class="absolute z-10 bottom-full mb-2 w-80 bg-gray-900 border border-gray-700 rounded-lg shadow-lg overflow-hidden"
+      :class="[
+        'absolute z-10 bottom-full mb-2 w-80 rounded-lg shadow-lg overflow-hidden border',
+        isDarkMode
+          ? 'bg-gray-900 border-gray-700'
+          : 'bg-white border-gray-300'
+      ]"
     >
       <ul>
         <li
@@ -69,17 +84,38 @@ onBeforeUnmount(() => {
           :key="model.value"
           @click="selectModel(model.name, model.value)"
           :class="[
-            'px-4 py-2 hover:bg-gray-800 cursor-pointer text-sm flex justify-between',
-            model.value === selectedModel.value ? 'bg-gray-700 text-white font-semibold' : '',
-            model.is_paid ? 'text-yellow-400' : 'text-gray-300'
+            'px-4 py-2 hover:cursor-pointer text-sm flex justify-between',
+            isDarkMode
+              ? 'hover:bg-gray-800'
+              : 'hover:bg-gray-100',
+            model.value === selectedModel.value
+              ? (isDarkMode
+                  ? 'bg-gray-700 text-white font-semibold'
+                  : 'bg-gray-200 text-black font-semibold')
+              : (model.is_paid
+                  ? (isDarkMode ? 'text-yellow-400' : 'text-yellow-600')
+                  : (isDarkMode ? 'text-gray-300' : 'text-gray-700'))
           ]"
         >
-          <span>{{ model.name }} <span v-if="model.is_paid" title="Dalam Pengembangan">⚙️</span></span>
+          <span>
+            {{ model.name }}
+            <span v-if="model.is_paid" title="Dalam Pengembangan">⚙️</span>
+          </span>
           <span>{{ model.is_paid ? '💵' : '🚀' }}</span>
         </li>
         <span>
-          <li class="px-4 py-2 text-xs text-gray-500">
-            <span class="text-[0.70rem] text-red-500/50">⚠️ Akan ada model-model baru yang lebih canggih, jadi tetap pantau pembaruan kami! 🍗</span>
+          <li
+            :class="[
+              'px-4 py-2 text-xs',
+              isDarkMode ? 'text-gray-500' : 'text-gray-400'
+            ]"
+          >
+            <span
+              :class="[
+                'text-[0.70rem]',
+                isDarkMode ? 'text-red-500/50' : 'text-red-500/80'
+              ]"
+            >⚠️ Akan ada model-model baru yang lebih canggih, jadi tetap pantau pembaruan kami! 🍗</span>
           </li>
         </span>
       </ul>

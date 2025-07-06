@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import chatService from '../services/chatService'
 import DropDownModel from './DropDownModel.vue';
 import { marked } from 'marked'
@@ -35,6 +35,7 @@ const messages = ref<Message[]>([
 
 const newMessage = ref('')
 const isTyping = ref(false)
+const isDarkMode = inject('theme')
 const messagesContainer = ref<HTMLElement>()
 const bottomMarker = ref<HTMLElement | null>(null)
 let selectedModel = ref('gemini-2.5-flash-lite-preview-06-17') // Default model
@@ -108,10 +109,14 @@ function handleSelectedModel(val: string) {
   selectedModel.value = val
 }
 
+
+
 </script>
 
 <template>
-  <div class="flex flex-col h-screen max-h-screen">
+  <div 
+    class="flex flex-col h-screen max-h-screen"
+  >
 
     <!-- Messages Container -->
     <div 
@@ -125,10 +130,17 @@ function handleSelectedModel(val: string) {
         class="animate-slide-up"
       >
         <div class="flex flex-col space-y-1">
-          <div :class="['message-bubble', message.isUser ? 'user-message' : 'bot-message']">
+          <div 
+            :class="[
+              'message-bubble',
+              message.isUser 
+                ? (isDarkMode ? 'user-message-dark' : 'user-message') 
+                : (isDarkMode ? 'bot-message-dark' : 'bot-message')
+            ]"
+          >
             <p class="text-sm leading-relaxed" v-html="highlightResponse(message.text)"></p>
           </div>
-          <div :class="['text-xs text-gray-400', message.isUser ? 'text-right' : 'text-left']">
+          <div :class="['text-xs text-gray-500', message.isUser ? 'text-right' : 'text-left']">
             {{ formatTime(message.timestamp) }}
           </div>
         </div>
@@ -136,7 +148,7 @@ function handleSelectedModel(val: string) {
 
       <!-- Typing indicator -->
       <div v-if="isTyping" class="flex justify-start animate-slide-up">
-        <div class="message-bubble bot-message">
+        <div :class="['message-bubble', isDarkMode ? 'bot-message-dark' : 'bot-message']">
           <div class="typing-dots">
             <div class="typing-dot" style="animation-delay: 0ms"></div>
             <div class="typing-dot" style="animation-delay: 150ms"></div>
@@ -148,15 +160,26 @@ function handleSelectedModel(val: string) {
 
     <!-- Input Area -->
     <div class="fixed bottom-0 left-0 right-0 mx-5 md:mx-0">
-      <div class="flex items-end space-x-3 max-w-3xl mx-auto bg-gray-800/40 p-3 rounded-3xl">
-        <div class="flex-1 relative bg-gray-900 rounded-2xl">
+      <div 
+        class="flex items-end space-x-3 max-w-3xl mx-auto p-3 rounded-3xl shadow"
+        :class="isDarkMode ? 'bg-gray-800' : 'bg-white/80'"
+      >
+        <div 
+          class="flex-1 relative rounded-2xl border"
+          :class="isDarkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'"
+        >
            <textarea
             v-model="newMessage"
             @keydown="handleKeyDown"
             @input="autoResize"
             ref="textareaRef"
             placeholder="Type your message here…"
-            class="w-full resize-none min-h-16 max-h-60 rounded-2xl bg-gray-900 border-gray-800 px-4 py-3 pr-12 border-0 outline-none focus:ring-0 transition-colors text-sm text-gray-400 overflow-hidden"
+            :class="[
+              'w-full resize-none min-h-16 max-h-60 rounded-2xl px-4 py-3 pr-12 border-0 outline-none focus:ring-0 transition-colors text-sm overflow-hidden',
+              isDarkMode 
+                ? 'bg-gray-900 text-gray-100' 
+                : 'bg-white text-gray-900'
+            ]"
             rows="1"
             ></textarea>
         <DropDownModel @selectedModel="handleSelectedModel" />
@@ -164,10 +187,11 @@ function handleSelectedModel(val: string) {
         <button
           @click="sendMessage"
           :disabled="!newMessage.trim() || isTyping"
-          class="inline-flex items-center justify-center w-11 h-11 rounded-full bg-gray-900 hover:bg-gray-950 disabled:bg-gray-500/40 disabled:cursor-not-allowed transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+          class="inline-flex items-center justify-center w-11 h-11 rounded-full transition-colors duration-200 focus:outline-none focus:ring-0 bg-gray-900 disabled:bg-gray-700"
         >
           <svg 
-            class="w-5 h-5 text-gray-400" 
+            class="w-5 h-5"
+            :class="isDarkMode ? 'text-white' : 'text-white'"
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
@@ -181,7 +205,7 @@ function handleSelectedModel(val: string) {
           </svg>
         </button>
       </div>
-      <p class="text-xs text-gray-400 text-center my-1">
+      <p :class="['text-xs text-center my-1', isDarkMode ? 'text-gray-400' : 'text-gray-500']">
         Press Enter to send, Shift+Enter for a new line
       </p>
     </div>
