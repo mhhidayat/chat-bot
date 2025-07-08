@@ -8,9 +8,9 @@ import (
 	"google.golang.org/genai"
 )
 
-func GenerateAIResponse(ctx context.Context, sendMessageRequest *dto.SendMessageRequest, conf *configs.Config, c chan<- *dto.SendMessageResponse) {
+func GenerateGeminiResponse(ctx context.Context, sendMessageRequest *dto.SendMessageRequest, conf *configs.Config, c chan<- *dto.SendMessageResponse) {
 	client, err := genai.NewClient(ctx, &genai.ClientConfig{
-		APIKey:  conf.AI.ApiKey,
+		APIKey:  conf.AI.GeminiApiKey,
 		Backend: genai.BackendGeminiAPI,
 	})
 	if err != nil {

@@ -1,5 +1,5 @@
 package configs
 
 type AI struct {
-	ApiKey string
+	GeminiApiKey string
 }

@@ -38,7 +38,7 @@ func (h *handler) sendMessage(c *fiber.Ctx) error {
 	}
 
 	channel := make(chan *dto.SendMessageResponse)
-	go aiutils.GenerateAIResponse(ctx, req, h.conf, channel)
+	go aiutils.GenerateGeminiResponse(ctx, req, h.conf, channel)
 	defer close(channel)
 
 	aiResponse := <-channel

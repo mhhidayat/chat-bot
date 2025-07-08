@@ -18,7 +18,7 @@ func NewConfig() *Config {
 	}
 	return &Config{
 		AI: AI{
-			ApiKey: os.Getenv("API_KEY"),
+			GeminiApiKey: os.Getenv("GEMINI_API_KEY"),
 		},
 		Server: Server{
 			AllowOrigins: os.Getenv("AllowOrigins"),
