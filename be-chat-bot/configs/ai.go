@@ -1,5 +1,5 @@
 package configs
 
 type AI struct {
-	GeminiApiKey string
+	GeminiApiKey, OpenRouterApiKey, OpenRouterApiUrl string
 }

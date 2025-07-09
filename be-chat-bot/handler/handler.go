@@ -26,7 +26,7 @@ func NewHandler(app *fiber.App, conf *configs.Config) {
 }
 
 func (h *handler) sendMessage(c *fiber.Ctx) error {
-	ctx, cancel := context.WithTimeout(c.Context(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(c.Context(), 30*time.Second)
 	defer cancel()
 
 	req := new(dto.SendMessageRequest)
@@ -38,7 +38,17 @@ func (h *handler) sendMessage(c *fiber.Ctx) error {
 	}
 
 	channel := make(chan *dto.SendMessageResponse)
-	go aiutils.GenerateGeminiResponse(ctx, req, h.conf, channel)
+	if req.Provider == "gemini" {
+		go aiutils.GenerateGeminiResponse(ctx, req, h.conf, channel)
+	} else if req.Provider == "or" {
+		go aiutils.GenerateOpenRouterResponse(ctx, req, h.conf, channel)
+	} else {
+		return c.Status(http.StatusInternalServerError).JSON(
+			jsonutils.ErrorResponse(
+				"Provider unknown",
+			),
+		)
+	}
 	defer close(channel)
 
 	aiResponse := <-channel

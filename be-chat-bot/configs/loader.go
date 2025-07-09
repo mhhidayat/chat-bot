@@ -18,7 +18,9 @@ func NewConfig() *Config {
 	}
 	return &Config{
 		AI: AI{
-			GeminiApiKey: os.Getenv("GEMINI_API_KEY"),
+			GeminiApiKey:     os.Getenv("GEMINI_API_KEY"),
+			OpenRouterApiKey: os.Getenv("OPENROUTER_API_KEY"),
+			OpenRouterApiUrl: os.Getenv("OPENROUTER_API_URL"),
 		},
 		Server: Server{
 			AllowOrigins: os.Getenv("AllowOrigins"),
