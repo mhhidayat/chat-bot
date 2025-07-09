@@ -39,6 +39,7 @@ const isDarkMode = inject('theme')
 const messagesContainer = ref<HTMLElement>()
 const bottomMarker = ref<HTMLElement | null>(null)
 let selectedModel = ref('gemini-2.5-flash-lite-preview-06-17') // Default model
+let selectedProvider = ref('gemini') // Default provider
 let messageIdCounter = 2
 
 const sendMessage = async () => { 
@@ -65,7 +66,7 @@ const sendMessage = async () => {
     autoResize()
   }, 5);
 
-  const response = await chatService.sendMessage(userInput, selectedModel.value)
+  const response = await chatService.sendMessage(userInput, selectedModel.value, selectedProvider.value)
     const botMessage: Message = {
     id: messageIdCounter++,
     text: response.message,
@@ -105,11 +106,10 @@ const autoResize = () => {
   }
 }
 
-function handleSelectedModel(val: string) {
-  selectedModel.value = val
+function handleSelectedModel(val: Array<string>) {
+  selectedModel.value = val[0]
+  selectedProvider.value = val[1]
 }
-
-
 
 </script>
 

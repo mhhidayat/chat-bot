@@ -12,16 +12,26 @@ const showAll = ref(false)
 
 // Model Data
 const models = ref([
-    { name: 'Gemini 2.5 Pro', value: 'gemini-2.5-pro', is_paid: false },
-    { name: 'Gemini 2.5 Flash', value: 'gemini-2.5-flash', is_paid: false },
-    { name: 'Gemini 2.5 Flash-Lite Preview 06-17', value: 'gemini-2.5-flash-lite-preview-06-17', is_paid: false },
+    // Gemini
+    { name: 'Gemini 2.5 Pro', value: 'gemini-2.5-pro', is_paid: false, provider: 'gemini', icon: 'gemini' },
+    { name: 'Gemini 2.5 Flash', value: 'gemini-2.5-flash', is_paid: false, provider: 'gemini', icon: 'gemini' },
+    { name: 'Gemini 2.5 Flash-Lite Preview 06-17', value: 'gemini-2.5-flash-lite-preview-06-17', is_paid: false, provider: 'gemini', icon: 'gemini' },
     // { name: 'Gemini 2.5 Flash Preview TTS', value: 'gemini-2.5-flash-preview-tts', is_paid: true }, //Hanya mendukung output AUDIO
-    { name: 'Gemini 2.0 Flash', value: 'gemini-2.0-flash', is_paid: false },
+    { name: 'Gemini 2.0 Flash', value: 'gemini-2.0-flash', is_paid: false, provider: 'gemini', icon: 'gemini' },
     // { name: 'Gemini 2.0 Flash Preview Image Generation', value: 'gemini-2.0-flash-preview-image-generation', is_paid: true }, //Hanya mendukung output IMAGE
-    { name: 'Gemini 2.0 Flash-Lite', value: 'gemini-2.0-flash-lite', is_paid: false },
-    { name: 'Gemini 1.5 Flash', value: 'gemini-1.5-flash', is_paid: false },
-    { name: 'Gemini 1.5 Flash-8B', value: 'gemini-1.5-flash-8b', is_paid: false },
+    { name: 'Gemini 2.0 Flash-Lite', value: 'gemini-2.0-flash-lite', is_paid: false, provider: 'gemini', icon: 'gemini' },
+    { name: 'Gemini 1.5 Flash', value: 'gemini-1.5-flash', is_paid: false, provider: 'gemini', icon: 'gemini' },
+    { name: 'Gemini 1.5 Flash-8B', value: 'gemini-1.5-flash-8b', is_paid: false, provider: 'gemini', icon: 'gemini' },
     // { name: 'Gemma 3 & 3n', value: 'Gemma 3 & 3n', is_paid: true }, // Ini bagus tapi masih belum di rilis google
+    // Deepseek
+    { name: 'DeepSeek R1T2 Chimera', value: 'tngtech/deepseek-r1t2-chimera:free', is_paid: false, provider: 'or', icon: 'deepseek' },
+    { name: 'DeepSeek R1 0528', value: 'deepseek/deepseek-r1-0528:free', is_paid: false, provider: 'or', icon: 'deepseek' },
+    { name: 'DeepSeek R1T Chimera', value: 'tngtech/deepseek-r1t-chimera:free', is_paid: false, provider: 'or', icon: 'deepseek' },
+    { name: 'MAI DS R1', value: 'microsoft/mai-ds-r1:free', is_paid: false, provider: 'or', icon: 'deepseek' },
+    { name: 'DeepSeek V3 Base', value: 'deepseek/deepseek-v3-base:free', is_paid: false, provider: 'or', icon: 'deepseek' },
+    { name: 'DeepSeek V3 0324', value: 'deepseek/deepseek-chat-v3-0324:free', is_paid: false, provider: 'or', icon: 'deepseek' },
+    { name: 'R1', value: 'deepseek/deepseek-r1:free', is_paid: false, provider: 'or', icon: 'deepseek' },
+    { name: 'DeepSeek V3', value: 'deepseek/deepseek-chat:free', is_paid: false, provider: 'or', icon: 'deepseek' },
 ])
 
 // Default selected model
@@ -42,12 +52,12 @@ const displayedModels = computed(() => {
 })
 
 // Handle Model Selection
-function selectModel(name: string, value: string) {
+function selectModel(name: string, value: string, provider: string) {
   selectedModel.value = { name, value }
   showDropdown.value = false
   search.value = ''
   showAll.value = false
-  emit('selectedModel', value)
+  emit('selectedModel', [value, provider])
 }
 
 // Handle Dropdown Toggle
@@ -128,8 +138,8 @@ onBeforeUnmount(() => {
           <li
             v-for="model in displayedModels"
             :key="model.value"
-            @click="selectModel(model.name, model.value)"
-            class="flex justify-between px-4 py-2 cursor-pointer hover:font-semibold transition"
+            @click="selectModel(model.name, model.value, model.provider)"
+            class="flex justify-between pr-4 pl-2 py-2 cursor-pointer hover:font-semibold transition"
             :class="[
               model.value === selectedModel.value
                 ? (isDarkMode
@@ -142,7 +152,10 @@ onBeforeUnmount(() => {
             ]"
           >
             <span>
-              {{ model.name }}
+              <span class="flex items-center gap-1">
+                <img :src="`/icon/${model.icon}.png`" alt="icon" width="15" height="15">
+                {{ model.name }}
+              </span>
               <span v-if="model.is_paid" class="ml-1" title="Model berbayar">⚙️</span>
             </span>
             <span>{{ model.is_paid ? '💵' : '🚀' }}</span>

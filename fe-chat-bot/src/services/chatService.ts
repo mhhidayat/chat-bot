@@ -12,12 +12,13 @@ export interface ChatResponse {
 
 class ChatService {
   // Placeholder for AI integration
-  async sendMessage(message: string, model: string): Promise<ChatResponse> {
+  async sendMessage(message: string, model: string, provider: string): Promise<ChatResponse> {
     try {
 
       const response = await api.post('send-message', {
         "prompt": message,
         "model": model,
+        "provider": provider
       })
 
       return { message: response.data.data.response }
