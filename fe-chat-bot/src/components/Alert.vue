@@ -3,7 +3,7 @@
 </script>
 
 <template>
-   <div class="fixed left-1/2 -translate-x-1/2 bottom-44 z-49 bg-zinc-800 text-zinc-100 border border-gray-900/50 rounded-md px-4 py-2 shadow-lg flex items-start space-x-2 text-sm animate-slide-in">
+   <div class="fixed left-1/2 -translate-x-1/2 bottom-44 bg-zinc-800 text-zinc-100 border border-gray-900/50 rounded-md px-4 py-2 shadow-lg flex items-start space-x-2 text-sm animate-slide-in w-[95%] sm:w-auto">
         <span class="mr-0.5">
             ⚠️
         </span>
