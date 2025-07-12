@@ -98,7 +98,7 @@ onBeforeUnmount(() => {
     <!-- Button -->
     <button
       @click="toggleDropdown"
-      class="flex justify-between items-center max-w-2xl px-2 py-1 rounded-lg border text-xs transition-colors"
+      class="flex justify-between items-center max-w-2xl px-2 py-1 rounded-lg border text-[.65rem] sm:text-xs transition-colors"
       :class="isDarkMode
         ? 'bg-gray-800 text-white border-gray-700 hover:bg-gray-700'
         : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100'"
