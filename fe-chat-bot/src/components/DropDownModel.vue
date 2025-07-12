@@ -37,7 +37,8 @@ const models = ref([
 // Default selected model
 const selectedModel = ref({
   name: models.value[2].name,
-  value: models.value[2].value
+  value: models.value[2].value,
+  icon: models.value[2].icon
 })
 
 // Computed model list
@@ -52,8 +53,8 @@ const displayedModels = computed(() => {
 })
 
 // Handle Model Selection
-function selectModel(name: string, value: string, provider: string) {
-  selectedModel.value = { name, value }
+function selectModel(name: string, value: string, provider: string, icon: string) {
+  selectedModel.value = { name, value, icon }
   showDropdown.value = false
   search.value = ''
   showAll.value = false
@@ -102,7 +103,8 @@ onBeforeUnmount(() => {
         ? 'bg-gray-800 text-white border-gray-700 hover:bg-gray-700'
         : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100'"
     >
-      {{ selectedModel.name }}
+      <img :src="`/icon/${selectedModel.icon}.png`" alt="icon" width="15" height="15" class="mr-1">
+        {{ selectedModel.name }}
       <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" stroke-width="2"
         viewBox="0 0 24 24">
         <path d="M19 9l-7 7-7-7"></path>
@@ -138,7 +140,7 @@ onBeforeUnmount(() => {
           <li
             v-for="model in displayedModels"
             :key="model.value"
-            @click="selectModel(model.name, model.value, model.provider)"
+            @click="selectModel(model.name, model.value, model.provider, model.icon)"
             class="flex justify-between pr-4 pl-2 py-2 cursor-pointer hover:font-semibold transition"
             :class="[
               model.value === selectedModel.value
