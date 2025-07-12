@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, inject } from 'vue'
+import { ref, inject, watch, nextTick } from 'vue'
 import chatService from '../services/chatService'
 import DropDownModel from './DropDownModel.vue';
+import PromptOptions from './PromptOptions.vue';
 import { marked } from 'marked'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/atom-one-dark.css'
@@ -24,14 +25,15 @@ interface Message {
   timestamp: Date
 }
 
-const messages = ref<Message[]>([
-  {
-    id: 1,
-    text: "Halo! Saya asisten AI Anda. Ada yang bisa saya bantu hari ini?",
-    isUser: false,
-    timestamp: new Date()
-  }
-])
+// const messages = ref<Message[]>([
+//   {
+//     id: 1,
+//     text: "Halo! Saya asisten AI Anda. Ada yang bisa saya bantu hari ini?",
+//     isUser: false,
+//     timestamp: new Date()
+//   }
+// ])
+const messages = ref<Message[]>([])
 
 const newMessage = ref('')
 const isTyping = ref(false)
@@ -41,6 +43,7 @@ const bottomMarker = ref<HTMLElement | null>(null)
 let selectedModel = ref('gemini-2.5-flash-lite-preview-06-17') // Default model
 let selectedProvider = ref('gemini') // Default provider
 let messageIdCounter = 2
+let showPromptOptions = ref<boolean>(true)
 
 const sendMessage = async () => { 
   if (!newMessage.value.trim()) return
@@ -111,12 +114,38 @@ function handleSelectedModel(val: Array<string>) {
   selectedProvider.value = val[1]
 }
 
+function handleSelectedPrompt(prompt: string) {
+  newMessage.value = prompt
+  nextTick(() => {
+    textareaRef.value?.focus()
+  })
+}
+
+watch(newMessage, () => {
+  if (newMessage.value.trim() || messages.value.length > 0) {
+    showPromptOptions.value = false
+  } else {
+    showPromptOptions.value = true
+  }
+})
+
 </script>
 
 <template>
   <div 
     class="flex flex-col h-screen max-h-screen"
   >
+
+    <transition
+      enter-active-class="transition-opacity duration-500 interpolate-ease-in-out"
+      leave-active-class="transition-opacity duration-500 interpolate-ease-in-out"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <PromptOptions v-if="showPromptOptions" @promptSelected="handleSelectedPrompt" />
+    </transition>
 
     <!-- Messages Container -->
     <div 
