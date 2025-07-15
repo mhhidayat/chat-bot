@@ -2,7 +2,6 @@
 import { ref, provide } from 'vue'
 import Theme from './components/Theme.vue'
 import ChatBot from './components/ChatBot.vue'
-import Alert from './components/Alert.vue'
 
 const isDarkMode = ref(false)
 provide('theme', isDarkMode)
@@ -10,7 +9,7 @@ provide('theme', isDarkMode)
 
 <template>
   <div class="h-screen">
-    <Alert />
+    <!-- <Alert /> -->
     <Theme @theme="isDarkMode = $event" />
     <ChatBot />
   </div>
