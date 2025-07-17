@@ -89,7 +89,7 @@ const currentItems = computed(() => {
         >
           <button
             :class="[
-            isDarkMode ? 'hover:bg-gray-800/50' : 'hover:bg-gray-200',
+            isDarkMode ? 'hover:bg-zinc-800/50' : 'hover:bg-gray-200',
             'hover:cursor-pointer py-2 px-4 rounded-lg w-full flex items-center gap-2 opacity-80 text-sm transition duration-200']"
           >
             <span class="text-lg">{{ item.icon }}</span>

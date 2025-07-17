@@ -11,18 +11,18 @@ onMounted(() => {
   } else {
     isDarkMode.value = true // Set default to dark mode
   }
-  document.body.classList.toggle('bg-gray-900', isDarkMode.value)
+  document.body.classList.toggle('bg-zinc-900', isDarkMode.value)
   document.body.classList.toggle('bg-gray-100', !isDarkMode.value)
-  document.body.classList.toggle('text-gray-100', isDarkMode.value)
+  document.body.classList.toggle('text-zinc-100', isDarkMode.value)
   document.body.classList.toggle('text-gray-900', !isDarkMode.value)
   emit('theme', isDarkMode.value)
 })
 
 watch(isDarkMode, (val) => {
   localStorage.setItem('theme', val.toString())
-  document.body.classList.toggle('bg-gray-900', val)
+  document.body.classList.toggle('bg-zinc-900', val)
   document.body.classList.toggle('bg-gray-100', !val)
-  document.body.classList.toggle('text-gray-100', val)
+  document.body.classList.toggle('text-zinc-100', val)
   document.body.classList.toggle('text-gray-900', !val)
   emit('theme', isDarkMode.value)
 })
@@ -34,7 +34,7 @@ watch(isDarkMode, (val) => {
       @click="isDarkMode = !isDarkMode"
       class="fixed top-4 right-4 z-10 px-3 py-1 rounded-full border shadow text-xs font-medium transition-colors"
       :class="isDarkMode 
-        ? 'bg-gray-800 border-gray-700 text-gray-100 hover:bg-gray-700' 
+        ? 'bg-zinc-800 border-zinc-700 text-zinc-100 hover:bg-zinc-700' 
         : 'bg-white border-gray-200 text-gray-900 hover:bg-gray-200'"
       aria-label="Toggle dark mode"
       title="Theme"

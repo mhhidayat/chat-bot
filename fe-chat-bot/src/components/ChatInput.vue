@@ -59,11 +59,11 @@ defineExpose({
   <div class="fixed bottom-0 left-0 right-0 mx-5 md:mx-0">
     <div 
       class="flex items-end space-x-3 max-w-3xl mx-auto p-3 rounded-3xl shadow"
-      :class="isDarkMode ? 'bg-gray-800' : 'bg-white/80'"
+      :class="isDarkMode ? 'bg-zinc-700' : 'bg-white/80'"
     >
       <div 
         class="flex-1 relative rounded-2xl border"
-        :class="isDarkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'"
+        :class="isDarkMode ? 'bg-zinc-800 border-zinc-600' : 'bg-white border-gray-200'"
       >
         <textarea
           v-model="newMessage"
@@ -74,7 +74,7 @@ defineExpose({
           :class="[
             'w-full resize-none min-h-16 max-h-60 rounded-2xl px-4 py-3 pr-12 border-0 outline-none focus:ring-0 transition-colors text-sm overflow-hidden',
             isDarkMode 
-              ? 'bg-gray-900 text-gray-100' 
+              ? 'bg-zinc-800 text-zinc-100' 
               : 'bg-white text-gray-900'
           ]"
           rows="1"
@@ -84,7 +84,7 @@ defineExpose({
       <button
         @click="sendMessage"
         :disabled="!newMessage.trim() || isTyping"
-        class="inline-flex items-center justify-center w-11 h-11 rounded-full transition-colors duration-200 focus:outline-none focus:ring-0 bg-gray-900 disabled:bg-gray-700"
+        class="inline-flex items-center justify-center w-11 h-11 rounded-full transition-colors duration-200 focus:outline-none focus:ring-0 bg-zinc-800 disabled:bg-zinc-600"
       >
         <svg 
           class="w-5 h-5"
@@ -102,7 +102,7 @@ defineExpose({
         </svg>
       </button>
     </div>
-    <p :class="['text-xs text-center my-1', isDarkMode ? 'text-gray-400' : 'text-gray-500']">
+    <p :class="['text-xs text-center my-1', isDarkMode ? 'text-zinc-400' : 'text-gray-500']">
       Press Enter to send, Shift+Enter for a new line
     </p>
   </div>

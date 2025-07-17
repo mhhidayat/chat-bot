@@ -27,7 +27,7 @@
   }
 
   .user-message-dark {
-    @apply bg-gray-800/40 text-gray-200 rounded-2xl rounded-br-md px-4 py-3 shadow-md;
+    @apply bg-zinc-800/40 text-zinc-200 rounded-2xl rounded-br-md px-4 py-3 shadow-md;
   }
   
   .bot-message {
@@ -35,7 +35,7 @@
   }
   
   .bot-message-dark {
-    @apply bg-gray-800/40 text-gray-200 rounded-2xl rounded-bl-md px-4 py-3 shadow-md;
+    @apply bg-zinc-800/40 text-zinc-200 rounded-2xl rounded-bl-md px-4 py-3 shadow-md;
   }
   
   .typing-dots {
@@ -43,7 +43,7 @@
   }
   
   .typing-dot {
-    @apply w-2 h-2 bg-gray-400 rounded-full animate-pulse;
+    @apply w-2 h-2 bg-zinc-400 rounded-full animate-pulse;
   }
 }
 
@@ -57,10 +57,10 @@
 }
 
 .chat-container::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #a1a1aa;
   border-radius: 3px;
 }
 
 .chat-container::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #71717a;
 }

@@ -47,7 +47,7 @@ const highlightResponse = (message: string) => {
             ]">
                 <p class="text-sm leading-relaxed" v-html="highlightResponse(message.text)"></p>
             </div>
-            <div :class="['text-xs text-gray-500', message.isUser ? 'text-right' : 'text-left']">
+            <div :class="['text-xs text-zinc-500', message.isUser ? 'text-right' : 'text-left']">
                 {{ formatTime(message.timestamp) }}
             </div>
         </div>
