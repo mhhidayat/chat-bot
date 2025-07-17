@@ -1,8 +1,8 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
 @layer base {
   * {
@@ -21,7 +21,7 @@
   .message-bubble {
     @apply max-w-xs sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl;
   }
-  
+
   .user-message {
     @apply bg-white text-gray-900 rounded-2xl rounded-br-md px-4 py-3 shadow-md;
   }
@@ -29,21 +29,176 @@
   .user-message-dark {
     @apply bg-zinc-800/40 text-zinc-200 rounded-2xl rounded-br-md px-4 py-3 shadow-md;
   }
-  
+
   .bot-message {
     @apply bg-white text-gray-900 rounded-2xl rounded-bl-md px-4 py-3 shadow-md;
   }
-  
+
   .bot-message-dark {
     @apply bg-zinc-800/40 text-zinc-200 rounded-2xl rounded-bl-md px-4 py-3 shadow-md;
   }
-  
+
   .typing-dots {
     @apply flex space-x-1;
   }
-  
+
   .typing-dot {
     @apply w-2 h-2 bg-zinc-400 rounded-full animate-pulse;
+  }
+
+  /* Markdown formatting styles */
+  .message-bubble .prose {
+    color: inherit;
+  }
+
+  .message-bubble .prose p {
+    margin-bottom: 0.75rem;
+  }
+
+  .message-bubble .prose p:last-child {
+    margin-bottom: 0;
+  }
+
+  .message-bubble .prose ul,
+  .message-bubble .prose ol {
+    margin: 0.5rem 0;
+    padding-left: 1.25rem;
+  }
+
+  .message-bubble .prose li {
+    margin: 0.25rem 0;
+  }
+
+  .message-bubble .prose h1,
+  .message-bubble .prose h2,
+  .message-bubble .prose h3,
+  .message-bubble .prose h4,
+  .message-bubble .prose h5,
+  .message-bubble .prose h6 {
+    margin: 0.75rem 0 0.5rem 0;
+    font-weight: 600;
+  }
+
+  .message-bubble .prose h1:first-child,
+  .message-bubble .prose h2:first-child,
+  .message-bubble .prose h3:first-child,
+  .message-bubble .prose h4:first-child,
+  .message-bubble .prose h5:first-child,
+  .message-bubble .prose h6:first-child {
+    margin-top: 0;
+  }
+
+  .message-bubble .prose blockquote {
+    border-left: 3px solid #d1d5db;
+    padding-left: 1rem;
+    margin: 0.75rem 0;
+    font-style: italic;
+  }
+
+  .message-bubble .prose code {
+    background-color: rgba(156, 163, 175, 0.1);
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+  }
+
+  .message-bubble .prose pre {
+    background-color: #1f2937;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 0.75rem 0;
+    overflow-x: auto;
+  }
+
+  .message-bubble .prose pre code {
+    background-color: transparent;
+    padding: 0;
+  }
+
+  .message-bubble .prose strong {
+    font-weight: 600;
+  }
+
+  .message-bubble .prose em {
+    font-style: italic;
+  }
+
+  /* Dark mode specific markdown styles */
+  .bot-message-dark .prose blockquote,
+  .user-message-dark .prose blockquote {
+    border-left: 3px solid #71717a;
+    color: #d4d4d8;
+  }
+
+  .bot-message-dark .prose code,
+  .user-message-dark .prose code {
+    background-color: rgba(113, 113, 122, 0.2);
+    color: #f4f4f5;
+  }
+
+  .bot-message-dark .prose pre,
+  .user-message-dark .prose pre {
+    background-color: #18181b;
+    border: 1px solid #3f3f46;
+  }
+
+  .bot-message-dark .prose pre code,
+  .user-message-dark .prose pre code {
+    color: #f4f4f5;
+  }
+
+  .bot-message-dark .prose h1,
+  .bot-message-dark .prose h2,
+  .bot-message-dark .prose h3,
+  .bot-message-dark .prose h4,
+  .bot-message-dark .prose h5,
+  .bot-message-dark .prose h6,
+  .user-message-dark .prose h1,
+  .user-message-dark .prose h2,
+  .user-message-dark .prose h3,
+  .user-message-dark .prose h4,
+  .user-message-dark .prose h5,
+  .user-message-dark .prose h6 {
+    color: #f4f4f5;
+  }
+
+  .bot-message-dark .prose strong,
+  .user-message-dark .prose strong {
+    color: #f4f4f5;
+  }
+
+  .bot-message-dark .prose a,
+  .user-message-dark .prose a {
+    color: #60a5fa;
+  }
+
+  .bot-message-dark .prose a:hover,
+  .user-message-dark .prose a:hover {
+    color: #93c5fd;
+  }
+
+  /* Light mode specific adjustments */
+  .bot-message .prose blockquote,
+  .user-message .prose blockquote {
+    border-left: 3px solid #d1d5db;
+    color: #6b7280;
+  }
+
+  .bot-message .prose code,
+  .user-message .prose code {
+    background-color: rgba(156, 163, 175, 0.15);
+    color: #374151;
+  }
+
+  .bot-message .prose pre,
+  .user-message .prose pre {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+  }
+
+  .bot-message .prose pre code,
+  .user-message .prose pre code {
+    color: #374151;
   }
 }
 

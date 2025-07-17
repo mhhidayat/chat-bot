@@ -25,7 +25,13 @@ renderer.code = function ({ text, lang }) {
     const highlighted = hljs.highlight(text, { language: validLang, ignoreIllegals: true }).value
     return `<pre><code class="hljs ${validLang}">${highlighted}</code></pre>`
 }
-marked.use({ renderer })
+
+// Configure marked options for better formatting
+marked.use({
+    renderer,
+    breaks: true, // Convert \n to <br>
+    gfm: true     // GitHub Flavored Markdown
+})
 
 const formatTime = (date: Date): string => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -45,7 +51,8 @@ const highlightResponse = (message: string) => {
                     ? (isDarkMode ? 'user-message-dark' : 'user-message')
                     : (isDarkMode ? 'bot-message-dark' : 'bot-message')
             ]">
-                <p class="text-sm leading-relaxed" v-html="highlightResponse(message.text)"></p>
+                <div class="text-sm leading-relaxed prose prose-sm max-w-none" v-html="highlightResponse(message.text)">
+                </div>
             </div>
             <div :class="['text-xs text-zinc-500', message.isUser ? 'text-right' : 'text-left']">
                 {{ formatTime(message.timestamp) }}
