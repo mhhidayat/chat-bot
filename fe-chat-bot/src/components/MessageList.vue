@@ -29,7 +29,7 @@ defineExpose({
 <template>
   <div 
     ref="messagesContainer"
-    class="flex-1 px-4 pt-6 pb-40 space-y-4 chat-container max-w-4xl w-full mx-auto"
+    class="flex-1 px-4 pt-6 pb-60 space-y-4 chat-container max-w-4xl w-full mx-auto"
   >
     <MessageBubble
       v-for="message in messages"
