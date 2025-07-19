@@ -15,7 +15,7 @@ class ChatService {
   async sendMessage(message: string, model: string, provider: string): Promise<ChatResponse> {
     try {
 
-      const response = await api.post('send-message', {
+      const response = await api.post('chat/send-message', {
         "prompt": message,
         "model": model,
         "provider": provider
